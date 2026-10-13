@@ -1,7 +1,11 @@
 Hash table:
+Sparse, memory scales with entities that actually have the component. O(1) average lookup/insert/delete, but poor cache locality since entries are scattered. Easy to add/remove entities or components, no shifting needed.
 
 Map:
+Sparse, same memory as hash table. O(logN) lookup/insert/delete via tree traversal, worse cache locality than hash table (pointer-chasing). Keeps entities sorted, but add/remove costs rebalancing.
 
-Sparse mapping 1:
+Sparse mapping 1 ([N][K]):
+Dense, O(N*K) memory even for entities missing most components. O(1) direct indexing. Cache-friendly when reading all of one entity's components (row is contiguous). Adding an entity requires reallocating/copying the whole vector.
 
-Sparse mapping 2:
+Sparse mapping 2 ([K][N]):
+Dense, same O(N*K) memory and O(1) indexing as mapping 1. Cache-friendly when reading one component type across all entities (the more common ECS access pattern). Growing N only resizes the K separate vectors, not one big structure. Cheaper to grow than mapping 1.
